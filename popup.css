@@ -1,0 +1,65 @@
+body {
+    width: 320px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 16px;
+    background-color: #282c34;
+    color: #eff2f6;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #ffa116; /* LeetCode Orange */
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+#hints-container {
+    font-size: 14px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hint-card {
+    background-color: #3e424b;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #ffa116;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#status-message {
+    color: #9e9e9e;
+    font-style: italic;
+    margin: 0;
+}
+
+button {
+    background-color: #ffa116;
+    color: #1a1a1a;
+    border: none;
+    padding: 10px 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #e58f14;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode Hints Extension",
+  "version": "1.0",
+  "description": "Detects the current LeetCode problem and displays local hints.",
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Show Problem Hints"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://leetcode.com/problems/*",
+        "*://*.leetcode.com/problems/*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+}
