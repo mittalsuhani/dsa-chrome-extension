@@ -1,16 +1,15 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "getProblemInfo") {
         
-        // Extract the exact problem slug from the URL path
         const pathParts = window.location.pathname.split('/');
         const problemSlug = pathParts[2]; 
 
         if (!problemSlug) {
-            sendResponse({ success: false, error: "Could not detect problem slug from URL." });
+            sendResponse({ success: false, error: "Could not detect problem slug." });
             return true;
         }
 
-        // LeetCode's public GraphQL query structure for pulling problem metadata
+        // Added 'topicTags' to the GraphQL query
         const graphQLQuery = {
             query: `
                 query questionHints($titleSlug: String!) {
@@ -18,18 +17,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         questionFrontendId
                         title
                         hints
+                        topicTags {
+                            name
+                        }
                     }
                 }
             `,
             variables: { titleSlug: problemSlug }
         };
 
-        // Query LeetCode's backend API directly from the page context
         fetch("https://leetcode.com/graphql", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(graphQLQuery)
         })
         .then(response => response.json())
@@ -37,20 +36,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if (result.data && result.data.question) {
                 const questionData = result.data.question;
                 
+                // Extract topic names into a simple array of strings
+                const topics = questionData.topicTags ? questionData.topicTags.map(t => t.name) : [];
+
                 sendResponse({
                     success: true,
                     title: `${questionData.questionFrontendId}. ${questionData.title}`,
-                    hints: questionData.hints || []
+                    hints: questionData.hints || [],
+                    topics: topics
                 });
             } else {
-                sendResponse({ success: false, error: "Problem not found in LeetCode database." });
+                sendResponse({ success: false, error: "Problem data not found." });
             }
         })
         .catch(err => {
-            console.error("GraphQL Fetch Error:", err);
+            console.error(err);
             sendResponse({ success: false, error: "Network error fetching LeetCode API." });
         });
 
-        return true; // Keeps the message pipeline open for asynchronous network responses
+        return true; 
     }
 });
